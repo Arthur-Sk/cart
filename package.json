@@ -1,0 +1,28 @@
+{
+  "name": "cart",
+  "version": "1.0.0",
+  "main": "index.js",
+  "dependencies": {
+    "jquery": "^3.3.1",
+    "jsdom": "^11.6.2",
+    "node-sass": "^4.7.2",
+    "popper.js": "^1.12.9"
+  },
+  "devDependencies": {
+    "font-awesome": "^4.7.0",
+    "webpack": "^3.11.0"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "sass": "node-sass -w sass/ -o css/",
+    "start": "webpack --config webpack.config.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "Cart_package"
+  },
+  "author": "",
+  "license": "ISC",
+  "keywords": [],
+  "description": ""
+}
