@@ -37,6 +37,10 @@ class Product extends Entity
     {
         $this->productId = $productId;
     }
+
+    /**
+     * @return mixed
+     */
     
     
     

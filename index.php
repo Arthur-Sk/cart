@@ -9,58 +9,54 @@
                 echo $cart->getProductAmount();
                 ?>) Cart
             </button>
-            <ul id="dropdownCartMenu" class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownCart">
+            <div id="dropdownCartMenu" class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownCart">
                 <?php $cartProducts = $cart->getProducts();
-                if (!empty($cartProducts)) {
-                    foreach ($cartProducts as $cartProductId => $amount) {
-                        $product = new \Classes\Entity\Product();
-                        $product = $product->getProductById($cartProductId) ?>
-                        <li>
-                            <table class="table">
-                                <tbody>
-                                <tr>
-                                    <td class="text-center cartItem">
-                                        <i class="fa fa-2x <?php echo $product['img'] ?>"></i>
-                                    </td>
-                                    <td class="text-center cartItemName">
-                                        <?php echo $product['name'] ?>
-                                    </td>
-                                    <td class="text-right cartItem">
-                                        <input type="text" name="" value="<?php echo $amount ?>" size="1" class="form-control">
-                                    </td>
-                                    <td class="text-right cartItem">
-                                        €<?php echo $product['price']*$amount; ?>
-                                    </td>
-                                    <td class="text-center cartItemBtns">
-                                        <button type="button" title="refresh" class="btn btn-success btn-sm">
-                                            <i class="fa fa-refresh"></i>
-                                        </button>
-                                        <button type="button" title="Delete" class="btn btn-danger btn-sm" onclick="$(this).cartProductRemove(<?php echo $product['id'] ?>)">
-                                            <i class="fa fa-times"></i>
-                                        </button>
-                                    </td>
-                                </tr>
-                                </tbody>
-                            </table>
-                        </li>
-                    <?php } ?>
+                if (!empty($cartProducts)) { ?>
+                    <table class="table table-hover">
+                        <?php foreach ($cartProducts as $cartProductId => $amount) {
+                            $product = new \Classes\Entity\Product();
+                            $product = $product->getProductById($cartProductId) ?>
 
-                    <li>
-                        <div>
-                            <table class="table table-bordered">
-                                <tbody><tr>
-                                    <td class="text-right"><strong>Total</strong></td>
-                                    <td class="text-right">€<span id="totalPrice"><?php echo $cart->getTotalPrice() ?></span></td>
-                                </tr>
-                                </tbody>
-                            </table>
-                            <p class="text-right"><a href="clear.php"><strong><i class="fa fa-shopping-cart"></i> Clear</strong></a>&nbsp;&nbsp;&nbsp;<a href="#"><strong><i class="fa fa-share"></i> Order now</strong></a></p>
-                        </div>
-                    </li>
+                            <tr data-product-id="<?php echo $product['id'] ?>">
+                                <td class="text-center">
+                                    <i class="fa fa-2x <?php echo $product['img'] ?>"></i>
+                                </td>
+                                <td class="text-center">
+                                    <?php echo $product['name'] ?>
+                                </td>
+                                <td class="text-right">
+                                    <input type="text" value="<?php echo $amount ?>" class="form-control text-center qty">
+                                </td>
+                                <td class="text-right">
+                                    €<?php echo $product['price']*$amount; ?>
+                                </td>
+                                <td class="text-center">
+                                    <button type="button" title="refresh" class="btn btn-success btn-sm" onclick="$(this).cartProductQtyEdit()">
+                                        <i class="fa fa-refresh"></i>
+                                    </button>
+                                    <button type="button" title="Delete" class="btn btn-danger btn-sm" onclick="$(this).cartProductRemove()">
+                                        <i class="fa fa-times"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                        <?php } ?>
+                    </table>
+                    <div>
+                        <table class="table table-bordered">
+                            <tr>
+                                <td class="text-right"><strong>Total</strong></td>
+                                <td class="text-right">€<span id="totalPrice"><?php echo $cart->getTotalPrice() ?></span></td>
+                            </tr>
+                        </table>
+                        <p class="text-right">
+                            <a href="clear.php"><strong><i class="fa fa-times"></i> Clear</strong></a>
+                            <a href="#" style="margin-left: 1em;"><strong><i class="fa fa-share"></i> Order now</strong></a>
+                        </p>
+                    </div>
                 <?php } else { ?>
-                    <li class="text-center">Cart is empty</li>
+                    <div class="text-center">Cart is empty</div>
                 <?php } ?>
-            </ul>
+            </div>
         </div>
 
         <div class="row text-center justify-content-center">
@@ -91,27 +87,6 @@
 
             <?php } ?>
 
-        </div>
-    </div>
-
-    <!-- Modal Added to cart -->
-    <div class="modal fade" id="cartModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    ...
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary">Save changes</button>
-                </div>
-            </div>
         </div>
     </div>
 

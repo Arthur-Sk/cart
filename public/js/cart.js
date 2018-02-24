@@ -1,3 +1,4 @@
+// Function reloads an element of the page
 function refresh(element) {
     $(element).load(document.URL+' '+element+'>*');
     return true;
@@ -7,7 +8,7 @@ function refresh(element) {
 $(document).ready(function () {
 
     // Adding product to cart
-    var flag = false;
+    let flag = false;
     $('.product').on('click', '.btn-add-to-cart', function () {
 
         // Anti-spam system
@@ -16,14 +17,14 @@ $(document).ready(function () {
         }
         flag=true;
 
-        var id = $(this).data('product-id');
+        let id = $(this).data('product-id');
 
         $.ajax({
             url: 'ajax/addToCart.php',
             type: 'get',
             data:'id='+id,
             success: function () {
-                refresh('.container > #dropdownCart') },
+                refresh('#dropdownCart') },
             error: function (xhr, textStatus, errorThrown) {
                 alert(errorThrown);
             }
@@ -33,18 +34,38 @@ $(document).ready(function () {
         setTimeout(function () {
             $('#cartLogo').addClass('shake');
             setTimeout (function(){
-                $('.fa-shopping-cart').removeClass('shake');
+                $('#cartLogo').removeClass('shake');
                 flag=false;
-            },750)
+            },750);
         },250);
     });
 
-    // Cart product removing
-    $.fn.cartProductRemove = function (id) {
+
+    // Cart each product stack deletion
+    $.fn.cartProductRemove = function () {
+        let id = $(this).closest('tr').data('product-id');
         $.ajax({
             url: 'ajax/deleteProduct.php',
             type: 'get',
-            data: 'id='+id,
+            data: {'id':id},
+            success: function () {
+                refresh('#dropdownCart');
+            },
+            error: function (xhr, textStatus, errorThrown) {
+                alert(errorThrown);
+            }
+        });
+    };
+
+    // Cart product quantity edition
+    $.fn.cartProductQtyEdit = function () {
+        let id = $(this).closest('tr').data('product-id');
+        let quantity = $(this).closest('tr').find('.qty').val();
+        console.log(quantity);
+        $.ajax({
+            url: 'ajax/cartProductQtyEdit.php',
+            type: 'get',
+            data: {'id': id, 'quantity': quantity},
             success: function () {
                 refresh('#dropdownCart');
             },

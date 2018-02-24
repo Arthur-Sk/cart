@@ -7,6 +7,8 @@ use Classes\Entity\Product;
 class Cart extends Entity
 {
 
+    public $cartTotalPrice;
+
     public function addProduct(Product $product){
         if (empty($_SESSION['cart'])){
             $_SESSION['cart'] = array();
@@ -16,13 +18,19 @@ class Cart extends Entity
     }
 
     public function removeProduct(Product $product){
-        var_dump($_SESSION['cart']);
         foreach ($_SESSION['cart'] as $key => $productId){
             if ($product->getProductId() == $productId){
                 unset($_SESSION['cart'][$key]);
             }
         }
+    }
+
+    public function editQuantity(Product $product, $quantity){
         var_dump($_SESSION['cart']);
+        $this->removeProduct($product);
+        for ($i = 1; $i <= $quantity; $i++){
+            $this->addProduct($product);
+        }
     }
 
     public function getProducts(){
@@ -44,13 +52,13 @@ class Cart extends Entity
         if (!$this->getProducts()){
             return 0;
         }
-        $cartTotalPrice = 0;
+        $this->cartTotalPrice = 0;
         foreach ($this->getProducts() as $productId => $amount){
             $product = new Product();
             $product = $product->getProductById($productId);
-            $cartTotalPrice += $product['price']*$amount;
+            $this->cartTotalPrice += $product['price']*$amount;
         }
-        return $cartTotalPrice;
+        return $this->cartTotalPrice;
     }
 
     
