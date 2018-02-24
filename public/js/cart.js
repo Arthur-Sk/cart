@@ -1,8 +1,14 @@
+$.getScript('public/js/Classes/Validator.js');
+
 // Function reloads an element of the page
 function refresh(element) {
     $(element).load(document.URL+' '+element+'>*');
     return true;
 }
+
+// function isInt(value) {
+//     return !isNaN(value) && (function(x) { return (x | 0) === x; })(parseFloat(value))
+// }
 
 
 $(document).ready(function () {
@@ -13,7 +19,7 @@ $(document).ready(function () {
 
         // Anti-spam system
         if (flag){
-            return
+            return;
         }
         flag=true;
 
@@ -43,7 +49,9 @@ $(document).ready(function () {
 
     // Cart each product stack deletion
     $.fn.cartProductRemove = function () {
+        event.stopPropagation();
         let id = $(this).closest('tr').data('product-id');
+
         $.ajax({
             url: 'ajax/deleteProduct.php',
             type: 'get',
@@ -59,9 +67,16 @@ $(document).ready(function () {
 
     // Cart product quantity edition
     $.fn.cartProductQtyEdit = function () {
+        event.stopPropagation();
         let id = $(this).closest('tr').data('product-id');
         let quantity = $(this).closest('tr').find('.qty').val();
-        console.log(quantity);
+
+
+        if (!Validator.isInt(quantity)){
+            $(this).closest('tr').find('.qty').addClass('text-danger');
+            return;
+        }
+
         $.ajax({
             url: 'ajax/cartProductQtyEdit.php',
             type: 'get',
