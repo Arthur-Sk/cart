@@ -1,14 +1,11 @@
 $.getScript('public/js/Classes/Validator.js');
 
+
 // Function reloads an element of the page
 function refresh(element) {
     $(element).load(document.URL+' '+element+'>*');
     return true;
 }
-
-// function isInt(value) {
-//     return !isNaN(value) && (function(x) { return (x | 0) === x; })(parseFloat(value))
-// }
 
 
 $(document).ready(function () {
@@ -26,7 +23,7 @@ $(document).ready(function () {
         let id = $(this).data('product-id');
 
         $.ajax({
-            url: 'ajax/addToCart.php',
+            url: getRoot()+'ajax/cart/addToCart.php',
             type: 'get',
             data:'id='+id,
             success: function () {
@@ -46,6 +43,20 @@ $(document).ready(function () {
         },250);
     });
 
+    // Cart clear button
+    $('#dropdownCart').on('click', '#btn-cart-clear', function (e) {
+
+        e.preventDefault();
+        $.ajax({
+            url: getRoot()+'ajax/cart/clear.php',
+            success: function () {
+                refresh('#dropdownCart') },
+            error: function (xhr, textStatus, errorThrown) {
+                alert(errorThrown);
+            }
+        });
+    });
+
 
     // Cart each product stack deletion
     $.fn.cartProductRemove = function () {
@@ -53,7 +64,7 @@ $(document).ready(function () {
         let id = $(this).closest('tr').data('product-id');
 
         $.ajax({
-            url: 'ajax/deleteProduct.php',
+            url: getRoot()+'ajax/cart/deleteProduct.php',
             type: 'get',
             data: {'id':id},
             success: function () {
@@ -78,7 +89,7 @@ $(document).ready(function () {
         }
 
         $.ajax({
-            url: 'ajax/cartProductQtyEdit.php',
+            url: getRoot()+'ajax/cart/productQtyEdit.php',
             type: 'get',
             data: {'id': id, 'quantity': quantity},
             success: function () {

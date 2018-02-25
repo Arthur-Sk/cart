@@ -12,3 +12,11 @@ function __autoload($className) {
     $className = str_replace('_', '/', $className);
     require_once(__DIR__."/../$className.php");
 }
+?>
+
+<script language="JavaScript">
+    // Choose your location
+    function getRoot() {
+        return window.location.origin+('/latloto/cart/')
+    }
+</script>
