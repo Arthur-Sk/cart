@@ -14,7 +14,7 @@ function __autoload($className) {
 }
 ?>
 
-<script language="JavaScript">
+<script language="JavaScript" type="text/javascript">
     // Choose your location
     function getRoot() {
         return window.location.origin+('/latloto/cart/')

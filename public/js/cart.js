@@ -1,11 +1,5 @@
-$.getScript('public/js/Classes/Validator.js');
-
-
-// Function reloads an element of the page
-function refresh(element) {
-    $(element).load(document.URL+' '+element+'>*');
-    return true;
-}
+$.getScript(getRoot()+'public/js/Classes/Validator.js');
+$.getScript(getRoot()+'public/js/functions.js');
 
 
 $(document).ready(function () {
@@ -84,7 +78,7 @@ $(document).ready(function () {
 
 
         if (!Validator.isInt(quantity)){
-            $(this).closest('tr').find('.qty').addClass('text-danger');
+            $(this).closest('tr').find('.qty').addClass('is-invalid');
             return;
         }
 
