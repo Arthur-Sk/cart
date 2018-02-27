@@ -1,3 +1,3 @@
 <?php include_once (__DIR__.'/../../template/header.php');
-session_unset();
-header('Location: ' . $_SERVER['HTTP_REFERER']);
+$cart = new \Classes\Entity\Cart();
+$cart->clearCart();

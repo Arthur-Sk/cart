@@ -3,17 +3,9 @@ namespace Classes\Database;
 
 class DBAL extends Database{
     
-    protected $serverAddress = 'localhost';
-    protected $userName = 'dev';
-    protected $DBPassword = 'thepassword1';
-    protected $dbName = 'latloto';
-    protected $port = 3306;
-
     public function __construct(){
         parent::__construct();
     }
-    
-    
 
     public function selectById(\Classes\Entity\Entity $object,$id)  {
         return $this->selectBy($object,['id'=>$id]);
