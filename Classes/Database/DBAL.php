@@ -30,7 +30,7 @@ class DBAL extends Database{
 
     public function save(\Classes\Entity\Entity $object, array $parameters)
     {
-        if ($parameters['id'] == NULL) {
+        if (empty($parameters['id'])) {
             return $this->buildInsert($object, $parameters);
         }
         return $this->buildEditById($object, $parameters['id'], $parameters);
