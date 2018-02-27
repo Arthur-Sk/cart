@@ -17,31 +17,31 @@
         </div>
 
         <!-- Checkout card form-->
-        <form action="paid.php" id="cardForm" class="needs-validation" novalidate>
+        <form action="paid.php" method="post" id="cardForm" class="needs-validation" novalidate>
             <div class="form-group">
                 <label class="required control-label" for="checkoutName">Name on card</label>
-                <input type="text" class="form-control" id="checkoutName" placeholder="Name" minlength="3" maxlength="50" required>
+                <input name="nameOnCard" type="text" class="form-control" id="checkoutName" placeholder="Name" minlength="3" maxlength="50" required>
                 <div class="invalid-feedback">
                     Minimum length is 3 symbols
                 </div>
             </div>
             <div class="form-group">
                 <label class="required control-label" for="checkoutCardNum">Card number</label>
-                <input type="text" pattern="\d*" class="form-control" id="checkoutCardNum" placeholder="Card number" minlength="16" maxlength="16" required>
+                <input name="cardNumber" type="text" pattern="\d*" class="form-control" id="checkoutCardNum" placeholder="Card number" minlength="16" maxlength="16" required>
                 <div class="invalid-feedback">
                     Card number must contain 16 numbers
                 </div>
             </div>
             <div class="form-group">
                 <label class="required control-label" for="checkoutCVV">CVV</label>
-                <input type="text" pattern="\d*" class="form-control" id="checkoutCVV" placeholder="CVV" minlength="3" maxlength="3" required>
+                <input name="CVV" type="text" pattern="\d*" class="form-control" id="checkoutCVV" placeholder="CVV" minlength="3" maxlength="3" required>
                 <div class="invalid-feedback">
                     CVV must contain 3 numbers
                 </div>
             </div>
             <div class="form-group">
                 <label class="required control-label" for="checkoutEmail">Email address</label>
-                <input type="email" class="form-control" id="CheckoutEmail" aria-describedby="emailHelp" placeholder="Enter email" minlength="3" maxlength="32" required>
+                <input name="email" type="email" class="form-control" id="CheckoutEmail" aria-describedby="emailHelp" placeholder="Enter email" minlength="3" maxlength="32" required>
                 <div class="invalid-feedback">
                     Please choose correct email
                 </div>
@@ -52,10 +52,10 @@
                     <div class="input-group-prepend">
                         <div class="input-group-text">+</div>
                     </div>
-                    <input type="text" pattern="\d*" class="form-control" id="checkoutTel" placeholder="Telephone number" maxlength="32">
-                </div>
-                <div class="invalid-feedback">
-                    ...
+                    <input name="telNumber" type="text" pattern="\d*" class="form-control" id="checkoutTel" placeholder="Telephone number" maxlength="32">
+                    <div class="invalid-feedback">
+                        Incorrect telephone number
+                    </div>
                 </div>
             </div>
             <div class="text-right">
@@ -71,11 +71,19 @@
                 <button class="btn btn-secondary" onclick="event.preventDefault(); window.location.replace(getRoot())">Back</button>
                 <button class="btn btn-success" type="submit">Continue</button>
             </div>
+            <div hidden>
+                <input name="paymentType" value="Card">
+            </div>
         </form>
 
         <!-- Checkout bank form-->
-        <form id="bankForm" class="needs-validation" style="display: none" novalidate>
+        <form id="bankForm" action="paid.php" method="post" style="display: none" novalidate>
             <p>iBank</p>
+            <div hidden>
+                <input name="paymentType" value="iBank">
+            </div>
+            <button class="btn btn-secondary" onclick="event.preventDefault(); window.location.replace(getRoot())">Back</button>
+            <button class="btn btn-success" type="submit">Continue</button>
         </form>
     </div>
 </div>

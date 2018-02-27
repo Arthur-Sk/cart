@@ -4,4 +4,9 @@ $product = new Classes\Entity\Product();
 $product->setProductId($_POST['id']);
 
 $cart = new Classes\Entity\Cart();
-$cart->removeProduct($product);
+
+if (!empty($_POST['quantity'])){
+    $cart->saveCart($product,$_POST['quantity']);
+} else {
+$cart->saveCart($product);
+}

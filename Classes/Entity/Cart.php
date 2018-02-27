@@ -3,7 +3,6 @@
 namespace Classes\Entity;
 
 use Classes\Database\DBAL;
-use Classes\Entity\Product;
 
 class Cart extends Entity
 {
@@ -14,7 +13,7 @@ class Cart extends Entity
     public $productsTotalAmount;
     public $totalPrice;
 
-    public function addProduct(Product $product, $quantity = null){
+    public function saveCart(Product $product, $quantity = null){
         $dbal = new DBAL();
 
         // If there's no cart, create new one
@@ -50,11 +49,6 @@ class Cart extends Entity
         $this->setTableName('cart_products');
         $dbal = new DBAL();
         $result = $dbal->deleteBy($this,array('product_id' => $product->getProductId()));
-        return true;
-    }
-
-    public function editQuantity(Product $product, $quantity){
-        $this->addProduct($product, $quantity);
         return true;
     }
 
@@ -126,8 +120,10 @@ class Cart extends Entity
         // If there's already set card id, return this
         if (!empty($this->cartId)){
             return $this->cartId;
+        } elseif (!empty($_SESSION['cartId'])){
+            return $_SESSION['cartId'];
         }
-        return $_SESSION['cartId'];
+        return null;
     }
 
     /**

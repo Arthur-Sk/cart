@@ -17,8 +17,8 @@ $(document).ready(function () {
         let id = $(this).data('product-id');
 
         $.ajax({
-            url: getRoot()+'ajax/cart/addToCart.php',
-            type: 'get',
+            url: getRoot()+'ajax/cart/saveCart.php',
+            type: 'post',
             data:'id='+id,
             success: function () {
                 refresh('#dropdownCart') },
@@ -59,7 +59,7 @@ $(document).ready(function () {
 
         $.ajax({
             url: getRoot()+'ajax/cart/deleteProduct.php',
-            type: 'get',
+            type: 'post',
             data: {'id':id},
             success: function () {
                 refresh('#dropdownCart');
@@ -77,14 +77,16 @@ $(document).ready(function () {
         let input = $(this).closest('tr').find('.qty');
         let quantity = input.val();
 
+
+        // Validate, if product quantity is integer and not more that provided number
         if (!Validator.isInt(quantity) || !Validator.maxNum(quantity,99)){
             input.addClass('is-invalid');
             return;
         }
 
         $.ajax({
-            url: getRoot()+'ajax/cart/productQtyEdit.php',
-            type: 'get',
+            url: getRoot()+'ajax/cart/saveCart.php',
+            type: 'post',
             data: {'id': id, 'quantity': quantity},
             success: function () {
                 refresh('#dropdownCart');
