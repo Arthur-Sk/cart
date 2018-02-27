@@ -3,6 +3,7 @@
 namespace Classes\Entity;
 
 use Classes\Database\DBAL;
+use Classes\Entity\Product;
 
 class Cart extends Entity
 {
@@ -10,22 +11,37 @@ class Cart extends Entity
     public $tableName = 'cart';
     public $cartId;
 
-    public $productsTotalAmount = 0;
-    public $totalPrice = 0;
+    public $productsTotalAmount;
+    public $totalPrice;
 
-    public function addProduct(Product $product){
+    public function addProduct(Product $product, $quantity = null){
         $dbal = new DBAL();
 
-        // If there's no cart, create new
-        if (empty($_SESSION['cartId'])){
+        // If there's no cart, create new one
+        if (empty($this->getCartId())){
             $data = array('date_created' => $this->getCurrentDatetime());
             $dbal->save($this, $data);
             $_SESSION['cartId'] = $dbal->getLastInsertId();
         }
 
         $this->setTableName('cart_products');
-        $data = array('cart_id' => $_SESSION['cartId'], 'product_id' => $product->getProductId());
-        $dbal -> save($this, $data);
+        $data = array('cart_id' => $this->getCartId(), 'product_id' => $product->getProductId());
+
+        // If this product already in cart, get this row id to modify it
+        if (!empty($oldCartProduct = $dbal->selectBy($this,$data)->fetch())){
+            $data['id'] = $oldCartProduct['id'];
+            $data['product_quantity'] = $oldCartProduct['product_quantity'];
+        }
+
+        // if quantity given, save it, else add one (for button add to cart)
+        if(!empty($quantity)) {
+            $data['product_quantity'] = $quantity;
+        } else {
+            $data['product_quantity'] += 1;
+        }
+
+        // Save to DB
+        $dbal->save($this, $data);
         return true;
     }
 
@@ -38,42 +54,34 @@ class Cart extends Entity
     }
 
     public function editQuantity(Product $product, $quantity){
-        $this->removeProduct($product);
-        for ($i = 1; $i <= $quantity; $i++){
-            $this->addProduct($product);
-        }
+        $this->addProduct($product, $quantity);
         return true;
     }
 
     public function clearCart(){
         $dbal = new DBAL();
         $this->setTableName('cart_products');
-        $dbal->deleteBy($this,array('cart_id' => $_SESSION['cartId']));
+        $dbal->deleteBy($this,array('cart_id' => $this->getCartId()));
         return true;
     }
 
     public function getProducts(){
-        if(empty($_SESSION['cartId'])){
+        if(empty($this->getCartId())){
             return null;
         }
-        $products = array();
         $this->setTableName('cart_products');
         $dbal = new DBAL();
-        $result = $dbal->selectBy($this,array('cart_id' => $_SESSION['cartId']));
-        while ($product = $result->fetch()){
-            array_push($products, $product['product_id']);
-        }
-        return array_count_values($products);
+        return $dbal->selectBy($this,array('cart_id' => $this->getCartId()))->fetchAll();
     }
 
-    public function getProductTotalAmount(){
+    public function getProductTotalQuantity(){
         if(!$this->getProducts()){
             return 0;
         }
 
-        $products = $this->getProducts();
-        foreach ($products as $product => $amount){
-            $this->productsTotalAmount += $amount;
+        $cartProducts = $this->getProducts();
+        foreach ($cartProducts as $cartProduct){
+            $this->productsTotalAmount += $cartProduct['product_quantity'];
         }
         return $this->productsTotalAmount;
     }
@@ -83,12 +91,19 @@ class Cart extends Entity
             return 0;
         }
 
-        foreach ($this->getProducts() as $productId => $amount){
+        $cartProducts = $this->getProducts();
+        foreach ($cartProducts as $cartProduct){
             $product = new Product();
-            $product = $product->getProductById($productId);
-            $this->totalPrice += $product['price']*$amount;
+            $product = $product->getProductById($cartProduct['product_id']);
+            $this->totalPrice += $product['price']*$cartProduct['product_quantity'];
         }
         return $this->totalPrice;
+    }
+
+    public function getStackPrice($cartProduct){
+        $product = new Product();
+        $product = $product->getProductById($cartProduct['product_id']);
+        return $product['price']*$cartProduct['product_quantity'];
     }
 
     public function getCurrentDatetime(){
@@ -103,6 +118,27 @@ class Cart extends Entity
         $this->tableName = $tableName;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getCartId()
+    {
+        // If there's already set card id, return this
+        if (!empty($this->cartId)){
+            return $this->cartId;
+        }
+        return $_SESSION['cartId'];
+    }
 
-    
+    /**
+     * @param mixed $cartId
+     */
+    public function setCartId($cartId)
+    {
+        $this->cartId = $cartId;
+    }
+
+
+
+
 }

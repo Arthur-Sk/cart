@@ -74,11 +74,11 @@ $(document).ready(function () {
     $.fn.cartProductQtyEdit = function () {
         event.stopPropagation();
         let id = $(this).closest('tr').data('product-id');
-        let quantity = $(this).closest('tr').find('.qty').val();
+        let input = $(this).closest('tr').find('.qty');
+        let quantity = input.val();
 
-
-        if (!Validator.isInt(quantity)){
-            $(this).closest('tr').find('.qty').addClass('is-invalid');
+        if (!Validator.isInt(quantity) || !Validator.maxNum(quantity,99)){
+            input.addClass('is-invalid');
             return;
         }
 
