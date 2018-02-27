@@ -2,7 +2,7 @@
     <button class="btn btn-lg btn-outline-success btn-cart" type="button" id="dropdownCartBtn" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
         <i id="cartLogo" class="fa fa-shopping-cart"></i> (<?php
         $cart = new \Classes\Entity\Cart();
-        echo $cart->getProductAmount();
+        echo $cart->getProductTotalAmount();
         ?>) Cart
     </button>
     <div id="dropdownCartMenu" class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownCart">
